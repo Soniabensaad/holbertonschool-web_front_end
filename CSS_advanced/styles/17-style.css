@@ -40,7 +40,7 @@ a:active{
 }
 
 .section-body{
-    padding: var(--section-footer-padding);
+    padding: var(--section-body-padding);
 }
 
 .section-footer{
