@@ -1,6 +1,9 @@
 // styles.scss
+$margin: 0px;
+$padding: 0px;
+$margin2: 10px;
 body {
-    margin: 0px;
-    padding: 0px; }
+    margin: $margin;
+    padding: $padding; }
     body p {
-      margin: 10px; }
+      margin: $margin2; }
