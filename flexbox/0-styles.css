@@ -185,7 +185,7 @@
     margin: 0;
     padding: 0;
     list-style: none;
-    display: flex;
+    
   }
   
  
@@ -203,6 +203,9 @@
     width: 50%;
   }
   
+  .row {
+    display: flex;
+  }
   /* Navbar
       ============================= */
   
