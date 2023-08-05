@@ -671,10 +671,10 @@
     margin: 0;
   }
 
-  .fieldset {
+  fieldset {
     display: flex;
     flex-direction: column;
-    justify-content: start;
-    border: none;
+    justify-content: flex-start;
+    border: 0;
     padding: 0 0 2rem;
   }
