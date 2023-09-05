@@ -12,5 +12,6 @@ function processPayment(amount) {
   processOrder(12321, 10.99);
   processOrder(12322, 12.99);
   processOrder(12323, 15.0);
+  processOrder(12324, 3.14);
   console.log('All the orders have been processed');
   
