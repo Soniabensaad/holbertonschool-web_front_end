@@ -28,7 +28,7 @@ function countPrimeNumbers() {
     return count;
   }
   
-  // Use a loop to call countPrimeNumbers 100 times with setTimeout
+  
   let totalExecutionTime = 0;
   let counter = 0;
   
