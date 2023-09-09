@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Task 4</title>
+    <!-- jQuery from a CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Firstname</th>
+                <th>Lastname</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Gerard</td>
+                <td>Bonissa</td>
+            </tr>
+        </tbody>
+    </table>
+    <script type="application/javascript">
+
+        function replaceFamilyTree() {
+            // Create a new <tr> element with two <td> cells
+            var newRow = $("<tr></tr>")
+                .append("<td>Gerard</td>")
+                .append("<td>Bonissa</td>");
+
+            // Replace the content of the <tbody> with the new <tr> element
+            $("tbody").html(newRow);
+        }
+
+        
+
+        // Call the replaceFamilyTree function
+        replaceFamilyTree();
+    </script>
+</body>
+
+</html>
