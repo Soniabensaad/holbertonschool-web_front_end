@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <title>Task 10</title>
+    <!-- jQuery from a CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+</head>
+<body>
+    <script type="application/javascript">
+        // Function to add a post row
+        function addPostRow(data) {
+            // Create a paragraph element
+            var paragraph = $("<p>");
+
+            // Create a span element with the post information
+            var span = $("<span>").text("Post created with id " + data.id + ", title: " + data.title + ", author: " + data.author);
+
+            // Append the span to the paragraph
+            paragraph.append(span);
+
+            // Append the paragraph to the body
+            $("body").append(paragraph);
+        }
+
+        // Function to list posts
+        function listPosts() {
+            $.ajax({
+                url: 'http://localhost:3000/posts', // Replace with your server's URL
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // Handle the retrieved data by calling addPostRow for each element
+                    data.forEach(function(post) {
+                        addPostRow(post);
+                    });
+                },
+                error: function(error) {
+                    // Display an alert with a Server Error message when the server is unavailable
+                    alert('Server Error');
+                    console.error('Error fetching posts:', error);
+                }
+            });
+        }
+
+        // Call the function listPosts when the page loads
+        $(document).ready(function () {
+            listPosts();
+        });
+    </script>
+</body>
+</html>
