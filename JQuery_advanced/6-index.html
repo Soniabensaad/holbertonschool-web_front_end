@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <title>Task 6</title>
+    <!-- jQuery from a CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <script type="application/javascript">
+        function createFamilyTree() {
+            // Append an empty table to the body
+            var table = $("<table  id='myTable'></table>");
+
+            // Create the table header with "Firstname" and "Lastname" columns
+            var thead = $("<thead></thead>").append("<tr><th>Firstname</th><th>Lastname</th><th>(x)</th></tr>");
+
+            // Append an empty tbody element to the table
+            var tbody = $("<tbody></tbody>");
+
+            // Append the thead and tbody to the table
+            table.append(thead, tbody);
+
+            // Append the table to the body
+            $("body").append(table);
+        }
+
+        function addNewMember(firstName, lastName, position) {
+            // Create a new row with three cells
+            var newRow = $("<tr></tr>")
+                .append("<td>" + firstName + "</td>")
+                .append("<td>" + lastName + "</td>")
+                .append("<td class='removeCell'>(x)</td>");
+
+            // Add a click event handler to the third cell in this row
+            newRow.find(".removeCell").click(function () {
+                // Remove the row when clicked
+                $(this).closest("tr").remove();
+            });
+
+            // Apply CSS background color using jQuery's .css() method
+            newRow.find(".removeCell").css("background-color", "orange");
+
+            if (position == 'before') {
+                // Add the new row at the top of the table
+                $("#myTable tbody").prepend(newRow);
+            } else {
+                // Add the new row at the bottom of the table
+                $("#myTable tbody").append(newRow);
+            }
+        }
+
+        function createForm() {
+            // Create two input elements
+            var input1 = $("<input>").attr("type", "text");
+            var input2 = $("<input>").attr("type", "text");
+
+            // Create a select element with options
+            var select = $("<select>")
+                .append($("<option>").text("Before").val("before"))
+                .append($("<option>").text("After").val("after"));
+
+            // Create an input element of type submit
+            var submit = $("<input>").attr("type", "submit");
+
+            // Add a click event handler to the submit button
+            submit.click(function () {
+                // Call the addNewMember function with the values of input1, input2, and select
+                addNewMember(input1.val(), input2.val(), select.val());
+            });
+
+            // Add the input elements, select, and submit button before the table
+            $("#myTable").before(input1, input2, select, submit);
+
+            // Select the second input using the :nth-of-type selector and add a class
+            $("#myTable").prevAll("input[type='text']:nth-of-type(2)").addClass("second-input");
+        }
+
+        // Call the createFamilyTree function to create the initial table structure
+        createFamilyTree();
+
+        // Call the createForm function to add input elements and a select before the table
+        createForm();
+
+        // Add some initial members to the table
+        addNewMember("Guillaume", "Salva", "before");
+        addNewMember("Arielle", "Snizt", "before");
+        addNewMember("Fanette", "Snizt", "before");
+        addNewMember("Gerard", "Snizt", "before");
+        addNewMember("Victor", "Salva", "before");
+    </script>
+</body>
+</html>
