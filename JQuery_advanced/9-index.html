@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <title>Task 9</title>
+    <!-- jQuery from a CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        /* New CSS class */
+        .loading {
+            opacity: 0.2;
+        }
+    </style>
+</head>
+<body>
+    <script type="application/javascript">
+        // Constants for pagination
+        var itemsPerPage = 10; // Number of items per page
+        var currentPage = 1;  // Initially, we start on page 1
+
+        // Function to create a search form
+        function createSearchForm() {
+            // Create an empty text input and a submit button
+            var input = $("<input>").attr("type", "text");
+            var submitButton = $("<input>").attr("type", "submit");
+
+            // Create an empty <ul> element for search results
+            var ulElement = $("<ul>");
+
+            // Create an empty <ul> element for pagination
+            var paginationElement = $("<ul>").attr("id", "pagination");
+
+            // Append the input, submit button, search results <ul>, and pagination <ul> to the body
+            $("body").append(input, submitButton, ulElement, paginationElement);
+
+            // Add a click event handler to the submit button
+            submitButton.click(function () {
+                // Get the value of the text input
+                var inputValue = input.val();
+
+                // Call the queryWikipedia function with the input value and default offset (0)
+                queryWikipedia(inputValue, 0);
+            });
+        }
+
+        // Function to add a new article to the list
+        function addNewArticle(id, title, snippet) {
+            // Create an <li> element
+            var liElement = $("<li>");
+
+            // Create the first <p> element
+            var firstParagraph = $("<p>");
+
+            // Create a <span> element with the text "id - "
+            var spanElement = $("<span>").text("id - ");
+
+            // Create a <b> element with the title
+            var bElement = $("<b>").text(title);
+
+            // Append the <span> and <b> elements to the first <p>
+            firstParagraph.append(spanElement, bElement);
+
+            // Create the second <p> element with the snippet
+            var secondParagraph = $("<p>").html(snippet); // Use .html() to correctly display HTML from Wikipedia
+
+            // Append both paragraphs to the <li> element
+            liElement.append(firstParagraph, secondParagraph);
+
+            // Append the <li> element to the <ul>
+            $("ul").append(liElement);
+        }
+
+        // Function to reset the pagination list
+        function resetPaginationList() {
+            $("#pagination").empty();
+        }
+
+        // Function to create pagination
+        function buildPagination(totalItems) {
+            // Calculate the total number of pages based on totalItems and itemsPerPage
+            var totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            // Clear the existing pagination
+            resetPaginationList();
+
+            // Loop to create and append pagination items
+            for (var i = 1; i <= totalPages; i++) {
+                var liElement = $("<li>").text(i);
+
+                // Add CSS styles
+                liElement.css({
+                    cursor: 'pointer',
+                    marginLeft: '10px'
+                });
+
+                // Apply bold styling to the current page
+                if (i === currentPage) {
+                    liElement.css('font-weight', 'bold');
+                }
+
+                // Add a click event handler to call queryWikipedia with the right offset
+                liElement.click(function () {
+                    var pageNumber = $(this).text(); // Get the clicked page number
+                    currentPage = parseInt(pageNumber); // Update the current page
+
+                    // Calculate the offset based on currentPage and itemsPerPage
+                    var offset = (currentPage - 1) * itemsPerPage;
+
+                    // Call queryWikipedia with the calculated offset
+                    queryWikipedia($("#textInput").val(), offset);
+                });
+
+                // Append the pagination item to the pagination list
+                $("#pagination").append(liElement);
+            }
+        }
+
+        // Function to query Wikipedia
+        function queryWikipedia(search, offset) {
+            // Reset the pagination list
+            resetPaginationList();
+            displayLoading(true); // Show loading
+
+            // Wikipedia API URL
+            var apiURL = "https://en.wikipedia.org/w/api.php";
+
+            var data = {
+                action: "query",
+                format: "json",
+                list: "search",
+                srsearch: search,
+                sroffset: offset // Use the provided offset
+            };
+
+            // Make a GET request using Ajax
+            $.ajax({
+                url: apiURL,
+                method: "GET",
+                dataType: "jsonp",
+                data: data,
+                success: function (response) {
+                    $.each(response.query.search, function (index, article) {
+                        addNewArticle(article.pageid, article.title, article.snippet);
+                    });
+
+                    // Update pagination based on the total number of items
+                    createPagination(response.query.searchinfo.totalhits);
+                    displayLoading(false); // Hide loading
+                },
+                error: function (error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        // Function to display loading
+        function displayLoading(loading) {
+            var firstUL = $("ul:first");
+            if (loading) {
+                firstUL.wrap($("<div>").addClass("loading"));
+            } else {
+                firstUL.unwrap();
+            }
+        }
+
+        // When the document is ready, create the search form
+        $(document).ready(function () {
+            createSearchForm();
+        });
+    </script>
+</body>
+</html>
