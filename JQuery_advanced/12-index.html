@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <title>Task 12</title>
+    <!-- jQuery from a CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <script type="application/javascript">
+        // Function to add a post row
+        function addPostRow(data) {
+            // Create a paragraph element with an ID attribute
+            var paragraph = $("<p>").attr("id", "row-" + data.id);
+
+            // Create a span element with a delete button
+            var deleteSpan = $("<span>").html('<a href="#" class="delete-link" data-id="' + data.id + '">(delete)</a>');
+
+            // Create a span element with the post information
+            var span = $("<span>").text("Post created with id " + data.id + ", title: " + data.title + ", author: " + data.author);
+
+            // Append the delete button span before the post information span
+            paragraph.append(deleteSpan, span);
+
+            // Append the paragraph to the body
+            $("body").append(paragraph);
+
+            // Add click event handler for delete button
+            $(".delete-link").on("click", function(e) {
+                e.preventDefault();
+                var postId = $(this).data("id");
+                deletePost(postId);
+            });
+        }
+
+        // Function to list posts
+        function listPosts() {
+            $.ajax({
+                url: 'http://localhost:3000/posts', // Replace with your server's URL
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // Handle the retrieved data by calling addPostRow for each element
+                    data.forEach(function(post) {
+                        addPostRow(post);
+                    });
+                },
+                error: function(error) {
+                    // Display an alert with a Server Error message when the server is unavailable
+                    alert('Server Error');
+                    console.error('Error fetching posts:', error);
+                }
+            });
+        }
+
+        // Function to build the form
+        function buildForm() {
+            // Create the form element
+            var form = $("<form>");
+
+            // Create a div for the author input
+            var authorDiv = $("<div>");
+            var authorLabel = $("<label>").attr("for", "author").text("Author");
+            var authorInput = $("<input>").attr({ type: "text", id: "author", name: "author" });
+            authorDiv.append(authorLabel, authorInput);
+            form.append(authorDiv);
+
+            // Create a div for the title textarea
+            var titleDiv = $("<div>");
+            var titleLabel = $("<label>").attr("for", "title").text("Title");
+            var titleTextarea = $("<textarea>").attr({ id: "title", name: "title" });
+            titleDiv.append(titleLabel, titleTextarea);
+            form.append(titleDiv);
+
+            // Add a submit button
+            form.append($('<input>').attr({ type: 'submit', value: 'Submit' }));
+
+            // Append the form to the body
+            $("body").append(form);
+
+            // Add form submission event handler
+            form.on('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                sendForm();
+            });
+
+            // Handle label clicks (select input text)
+            $('label').on('click', function() {
+                $(this).next('input').select();
+            });
+
+            // Handle input text enter key (form submission)
+            $('input[type="text"]').on('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    form.submit();
+                }
+            });
+        }
+
+        // Function to send the form data
+        function sendForm() {
+            // Add text "About to send the query to the API" after the form
+            $('form').after('<p>About to send the query to the API</p>');
+
+            // Create a data object with title and author attributes
+            var data = {
+                title: $('#title').val(),
+                author: $('#author').val()
+            };
+
+            // Send a POST request to the server
+            $.ajax({
+                url: 'http://localhost:3000/posts', // Replace with your server's URL
+                method: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(response) {
+                    // Call addPostRow with the data from the API
+                    addPostRow(response);
+                },
+                error: function() {
+                    // Display an alert with the message Error sending the POST query
+                    alert('Error sending the POST query');
+                }
+            });
+        }
+
+        // Function to delete a post
+        function deletePost(id) {
+            // Send a DELETE request to the server
+            $.ajax({
+                url: 'http://localhost:3000/posts/' + id, // Replace with your server's URL
+                method: 'DELETE',
+                success: function() {
+                    // Remove the row from the body using jQuery's remove function
+                    $("#row-" + id).remove();
+                },
+                error: function() {
+                    // Display an alert with the message Post was not deleted
+                    alert('Post was not deleted');
+                }
+            });
+        }
+
+        // Call the functions when the page loads
+        $(document).ready(function () {
+            listPosts();
+            buildForm();
+        });
+    </script>
+</body>
+</html>
