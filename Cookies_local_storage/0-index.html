@@ -5,35 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>0-index</title>
 </head>
+<!-- html -->
 <body>
     <h1>Login to the website</h1>
-    <label for="firstname">First Name:</label>
-    <input type="text" id="firstname" name="firstname">
-
-    <label for="email">Email:</label>
-    <input type="text" id="email" name="email">
-
-    <button onclick="setCookies()">Log me in</button>
-
+    <input type="text" id="firstname" placeholder="Firstname">
+    <input type="text" id="email" placeholder="Email">
+    <button onclick="setCookies()">Log me in</button><br/>
     <h1>Cookies</h1>
     <button onclick="showCookies()">Show the cookies</button>
-
-    <script>
+    <script type="application/javascript">
         function setCookies() {
-            document.cookie = `firstname=${document.getElementById('firstname').value}`;
-            document.cookie = `email=${document.getElementById('email').value}`;
+            /* variables */
+            let firstname = document.getElementById("firstname").value;
+            let email = document.getElementById("email").value;
+            /* create cookies */
+            document.cookie = "firstname=" + firstname;
+            document.cookie = "email=" + email;
+            alert('Congrats !');
         }
 
         function showCookies() {
-            // Create a new paragraph element
-            const newParagraph = document.createElement("p");
-            
-            // Set the inner HTML of the paragraph with Cookies: and the value of the cookie
-            newParagraph.innerHTML = `Cookies: ${document.cookie}`;
-            
-            // Append the paragraph at the bottom of the page
-            document.body.appendChild(newParagraph);
+            /* create a DOM element p */
+            let paragraph = document.createElement("p");
+            /* set the inner html with Cookies: and value of the cookie */
+            paragraph.innerHTML = "Cookies: " + document.cookie;
+            /* add paragraph at the bottom of the page */
+            document.body.appendChild(paragraph);
         }
     </script>
+
+
+    
+
 </body>
 </html>
