@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+</head>
+<body>
+    <h1>Available Items</h1>
+    <ul id="itemList"></ul>
+
+    <h2>Your Cart</h2>
+    <p id="cartMessage"></p>
+
+    <script>
+        // Check if local storage is available
+        if (typeof(Storage) === "undefined") {
+            alert("Sorry, your browser does not support Web storage. Try again with a better one.");
+        } else {
+            // Create an array of available items
+            var availableItems = ["Shampoo", "Soap", "Sponge", "Water"];
+
+            // Function to add an item to the cart
+            function addItemToCart(item) {
+                localStorage.setItem(item, "true");
+                displayCart();
+            }
+
+            // Function to create the item list
+            function createStore() {
+                var itemList = document.getElementById("itemList");
+
+                // Loop through available items and create list items
+                availableItems.forEach(function (item) {
+                    var li = document.createElement("li");
+                    li.textContent = item;
+                    li.addEventListener("click", function () {
+                        addItemToCart(item);
+                    });
+                    itemList.appendChild(li);
+                });
+            }
+
+            // Function to display the cart
+            function displayCart() {
+                var cartMessage = document.getElementById("cartMessage");
+                var cartCount = 0;
+
+                // Count items in the cart
+                for (var i = 0; i < localStorage.length; i++) {
+                    var key = localStorage.key(i);
+                    if (localStorage.getItem(key) === "true") {
+                        cartCount++;
+                    }
+                }
+
+                // Display cart message
+                if (cartCount === 0) {
+                    cartMessage.textContent = "";
+                } else {
+                    cartMessage.textContent = "You previously had " + cartCount + " items in your cart.";
+                }
+            }
+
+            // Initialize the application
+            createStore();
+            displayCart();
+        }
+    </script>
+</body>
+</html>
